@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>saabzi.pk - Delivery</title>
+<style>
+  body{font-family:system-ui, sans-serif; background:#f6f6f6; margin:0; padding:20px;}
+  .card{background:#fff; padding:20px; border-radius:12px; max-width:500px; margin:auto; box-shadow:0 2px 8px rgba(0,0,0,.1);}
+  input,button{width:100%; padding:12px; margin:8px 0; border:1px solid #ddd; border-radius:8px; font-size:16px;}
+  button{background:#16a34a; color:#fff; border:none; cursor:pointer;}
+  button:active{opacity:.9;}
+  h1{color:#16a34a; margin:0 0 10px;}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>saabzi.pk</h1>
+  <p>Fast delivery across Pakistan</p>
+  <input id="pickup" placeholder="Pickup address">
+  <input id="dropoff" placeholder="Dropoff address">
+  <input id="item" placeholder="What are we delivering?">
+  <input id="price" type="number" value="200" placeholder="Price (PKR)">
+  <button onclick="placeOrder()">Place Order</button>
+  <p id="msg"></p>
+</div>
+
+<script>
+async function placeOrder(){
+  const data = {
+    pickup: document.getElementById('pickup').value,
+    dropoff: document.getElementById('dropoff').value,
+    item: document.getElementById('item').value,
+    price: document.getElementById('price').value
+  };
+  const res = await fetch('api/order.php', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(data)
+  });
+  document.getElementById('msg').innerText = res.ok ? 'Order placed! We’ll contact you.' : 'Error placing order';
+}
+</script>
+</body>
+</html>
