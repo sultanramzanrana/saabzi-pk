@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>saabzi.pk - Admin</title>
+<style>
+  body{font-family:system-ui, sans-serif; background:#f6f6f6; margin:0; padding:20px;}
+  .card{background:#fff; padding:16px; border-radius:12px; margin:12px auto; max-width:600px; box-shadow:0 2px 8px rgba(0,0,0,.1);}
+  button{padding:8px 12px; margin-right:8px; border:none; border-radius:8px; background:#2563eb; color:#fff;}
+</style>
+</head>
+<body>
+<h1>saabzi.pk Admin</h1>
+<div id="list">Loading...</div>
+
+<script>
+async function load(){
+  const res = await fetch('api/get_orders.php');
+  const orders = await res.json();
+  document.getElementById('list').innerHTML = orders.map(o=>`
+    <div class="card">
+      <p><b>Pickup:</b> ${o.pickup_address}</p>
+      <p><b>Dropoff:</b> ${o.dropoff_address}</p>
+      <p><b>Item:</b> ${o.item_description}</p>
+      <p><b>Status:</b> ${o.status}</p>
+      <p><b>Price:</b> PKR ${o.price_pkr}</p>
+      <button onclick="update(${o.id},'picked_up')">Picked Up</button>
+      <button onclick="update(${o.id},'delivered')">Delivered</button>
+    </div>
+  `).join('');
+}
+async function update(id,status){
+  await fetch('api/update_order.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,status})});
+  load();
+}
+load();
+</script>
+</body>
+</html>
